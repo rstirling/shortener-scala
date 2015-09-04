@@ -3,9 +3,9 @@
 # ~~~~
 
 # Home page
-GET        /                      controllers.Application.index
-GET        /shortener/*url        controllers.Shortener.get(url: String)
-GET        /shortener/*id      controllers.Shortener.get(id: Integer)
+GET        /                        controllers.Application.index
+GET        /shortener/*url          controllers.Shortener.encodeUrl(url: String)
+GET        /*id           controllers.Shortener.get(id: Integer)
 
 
 # Map static resources from the /public folder to the /assets URL path
