@@ -1,16 +1,23 @@
 package controllers
 
+import java.net.InetAddress
+
+import com.redis.RedisClient
 import play.Logger
-import play.api.libs.json._
 import play.api.mvc._
+
 
 import scala.util.hashing.MurmurHash3._
 
 object Shortener extends Controller {
 
-  val host = "http://10.0.0.25:9000/"
+  val ip = InetAddress.getLocalHost.getHostAddress
+  val host = "http://"+ip+":9000/"
+
+  val redisClient = new RedisClient("localhost", 6379)
 
   var urlMap = scala.collection.mutable.Map[Int,String]()
+
 
   def encode (url: String) = finalizeHash(stringHash(url), url.length)
 
@@ -18,19 +25,16 @@ object Shortener extends Controller {
 
     val encodedUrl: Int = encode(url)
 
-    val newUrl = if(urlMap.contains(encodedUrl)) {
+    val newUrl = if(redisClient.exists(encodedUrl)) {
       Logger.debug("Already Encoded URL["+url+"] to hash["+encodedUrl+"]")
       encodedUrl
     } else {
-      urlMap.put(encodedUrl, url)
+      redisClient.set(encodedUrl, url)
       Logger.debug("Encoding URL["+url+"] to hash["+encodedUrl+"]")
       encodedUrl
     }
 
-    Ok(Json.obj(
-      "url" -> (host + newUrl),
-      "message" -> "OK"
-    ))
+    Ok(newUrl)
   }
 
   def get (id: Int) = Action {
