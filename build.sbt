@@ -8,8 +8,8 @@ scalaVersion := "2.11.1"
 
 resolvers += "rediscala" at "http://dl.bintray.com/etaty/maven"
 
-resolvers += "play2-rediscala" at "http://dl.bintray.com/yorrick/maven"
+resolvers += "google-sedis-fix" at "http://pk11-scratch.googlecode.com/svn/trunk"
 
-libraryDependencies ++= Seq( jdbc , anorm , cache , ws, "com.google.guava" % "guava" % "17.0", "fr.njin" %% "play2-rediscala" % "2.3.1.0", "com.etaty.rediscala" %% "rediscala" % "1.4.0" )
+libraryDependencies ++= Seq( jdbc , anorm , cache , ws, "com.google.guava" % "guava" % "17.0", "net.debasishg" %% "redisclient" % "3.0")
 
 unmanagedResourceDirectories in Test <+=  baseDirectory ( _ /"target/web/public/test" )  
